@@ -1,0 +1,14 @@
+prefix=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg
+exec_prefix=${prefix}
+libdir=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib
+includedir=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/include
+
+Name: libavdevice
+Description: FFmpeg device handling library
+Version: 58.11.101
+Requires: 
+Requires.private: libavfilter >= 7.87.100, libswscale >= 5.8.100, libavformat >= 58.48.100, libavcodec >= 58.96.100, libswresample >= 3.8.100, libavutil >= 56.55.100
+Conflicts:
+Libs: -L${libdir}  -lavdevice 
+Libs.private: -lm
+Cflags: -I${includedir}

@@ -1,0 +1,14 @@
+prefix=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg
+exec_prefix=${prefix}
+libdir=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib
+includedir=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/include
+
+Name: libavformat
+Description: FFmpeg container format library
+Version: 58.48.100
+Requires: 
+Requires.private: libavcodec >= 58.96.100, libswresample >= 3.8.100, libavutil >= 56.55.100
+Conflicts:
+Libs: -L${libdir}  -lavformat 
+Libs.private: -lm -lgmp -L/Users/devyk/Data/Android/NDK/android-ndk-r21b/platforms/android-16/arch-arm/usr/lib -lz -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/gnutls/lib -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/nettle/lib -L/Users/devyk/Data/Android/NDK/android-ndk-r21b/platforms/android-16/arch-arm/usr/lib -lgnutls -lhogweed -lgmp -lnettle -lz
+Cflags: -I${includedir}

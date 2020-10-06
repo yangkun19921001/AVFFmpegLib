@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.arthenica.mobileffmpeg.ConfigTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-10-06T08:19:33" hostname="DevYK-MacBookPro.local" time="0.0">
+  <properties/>
+  <testcase name="getPackageName" classname="com.arthenica.mobileffmpeg.ConfigTest" time="0.0"/>
+  <testcase name="getExternalLibraries" classname="com.arthenica.mobileffmpeg.ConfigTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,14 @@
+prefix=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg
+exec_prefix=${prefix}
+libdir=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/lib
+includedir=/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/ffmpeg/include
+
+Name: libavcodec
+Description: FFmpeg codec library
+Version: 58.96.100
+Requires: 
+Requires.private: libswresample >= 3.8.100, libavutil >= 56.55.100
+Conflicts:
+Libs: -L${libdir}  -lavcodec 
+Libs.private: -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/libwebp/lib -lwebpmux -lwebp -pthread -liconv -lm -L/Users/devyk/Data/Android/NDK/android-ndk-r21b/platforms/android-16/arch-arm/usr/lib -lz -lfdk-aac -lmp3lame -lm -lopencore-amrnb -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/opus/lib -lopus -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/speex/lib -lspeex -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/libwebp/lib -lwebp -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/x264/lib -lx264 -lm -ldl -L/Users/devyk/Data/Project/sample/github_code/mobile-ffmpeg/prebuilt/android-arm/openh264/lib -lopenh264 -lstdc++
+Cflags: -I${includedir}

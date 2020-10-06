@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.novoda.bintray-release'//添加 bintray-release 配置
 
 android {
     compileSdkVersion 29
@@ -28,9 +29,16 @@ android {
         }
     }
 
-    repositories {
-        flatDir {
-            dirs 'libs'
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+        }
+    }
+
+    sourceSets {
+        main {
+//            jniLibs.srcDirs = ["../libs"]
+            jniLibs.srcDirs = ["libs"]
         }
     }
 
@@ -39,14 +47,35 @@ android {
     }
 }
 
+task javadoc(type: Javadoc) {
+    title = 'ffmpeg-core'
+    destinationDir = file("${projectDir}/../../docs/android/javadoc")
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    source = android.sourceSets.main.java.srcDirs
+}
 
+publish {
+    //bintray.com 用户名
+    userOrg = 'yangkun19921001'
+    // bintray 上仓库的名字
+    repoName = 'AVFFmpegLib'
+    //jcenter上 的路径
+    groupId = 'com.devyk.ffmpeglib'
+    //项目名称
+    artifactId = 'AVFFmpegLib'
+    //版本号
+    publishVersion = '1.0.2'// 描述
+    //描述
+    desc = '移至 FFmpeg 最新版本v4.4-dev-416 + libx264 + freetype + fontconfig + fribidi + openh264 +libfdk-aac + gnutls + speex + libwebp + lame +opus + opencore-amr + https）编译的适用于 Android 平台的音视频编辑、视频剪辑的快速处理框架，目前内置了音视频剪辑、编辑、视频拼接、字幕、水印、倒放等功能，也可以根据 ffmpeg 命令模式来进行处理。'
+    //一般填 github 项目地址,一定是要有效的地址
+    website = 'https://github.com/yangkun19921001/AVFFmpegLib'
+}
 
 dependencies {
     testImplementation "androidx.test.ext:junit:1.1.1"
+    testImplementation "org.json:json:20190722"
     implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    api(name:'ffmpeg-core-release', ext:'aar')
 }
 repositories {
     mavenCentral()

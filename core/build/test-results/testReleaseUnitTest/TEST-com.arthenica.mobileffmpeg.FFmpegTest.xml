@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.arthenica.mobileffmpeg.FFmpegTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2020-10-06T08:19:34" hostname="DevYK-MacBookPro.local" time="0.01">
+  <properties/>
+  <testcase name="parseSingleQuotesInCommand" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.001"/>
+  <testcase name="mediaInformationGif" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.005"/>
+  <testcase name="mediaInformationJpg" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.001"/>
+  <testcase name="mediaInformationMp3" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.0"/>
+  <testcase name="mediaInformationMp4" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.001"/>
+  <testcase name="mediaInformationOgg" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.001"/>
+  <testcase name="mediaInformationPng" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.0"/>
+  <testcase name="parseDoubleQuotesAndEscapesInCommand" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.0"/>
+  <testcase name="argumentsToString" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.0"/>
+  <testcase name="parseDoubleQuotesInCommand" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.0"/>
+  <testcase name="parseSimpleCommand" classname="com.arthenica.mobileffmpeg.FFmpegTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

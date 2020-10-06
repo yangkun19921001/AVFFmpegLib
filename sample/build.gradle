@@ -53,7 +53,8 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 
     //视频剪辑器 SDK
-    implementation project(path: ':core')
+//    implementation project(path: ':core')
+    implementation 'com.devyk.ffmpeglib:AVFFmpegCore:1.0.1'
 
 
 }
