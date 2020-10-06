@@ -2,7 +2,7 @@
 
 ## 前言
 
-有时候我们想对音视频进行加工处理，比如视频编辑、添加字幕、裁剪等功能处理，虽然 Github 上开源了一些比较不错的项目，但是如果我们想在此项目上进行二次开发，比如我想拿到该项目的动态库基于 OpenH264 来进行对 YUV 编码，这个时候有可能该动态库没有集成 OpenH64 库，所以为了扩展性，我就自己弄了一套万能的库，基本上包含了所有常用的音视频处理库，你不用再去进行编译。编译完成的头文件和动态库可以在该项目的 thirdparties 目录自行获取。
+有时候我们想对音视频进行加工处理，比如视频编辑、添加字幕、裁剪等功能处理，虽然 Github 上开源了一些比较不错的项目，但是如果我们想在此项目上进行二次开发，比如我想拿到该项目的动态库基于 OpenH264 来进行对 YUV 编码，这个时候有可能该动态库没有集成 OpenH64 库，所以为了扩展性，我就自己弄了一套万能的库，基本上包含了所有常用的音视频处理库，你不用再去进行编译。编译完成的头文件和动态库可以在该项目的 core/cpp 目录自行获取(**已完全开源**)。
 
 ##介绍
 
@@ -33,6 +33,41 @@ implementation 'com.devyk.ffmpeglib:AVFFmpegCore:1.0.1'
 ```
 
 ###2. 功能 API 介绍
+
+**回调处理**
+
+```kotlin
+public interface ExecuteCallback {
+		/**
+		*开始处理
+		*/
+    void onStart(Long executionId);
+    /**
+     * 如果外部传递了当前操作视频的时长，那么返回的是百分比进度，反之返回的是操作视频对应的微妙时长
+     *
+     * @param v
+     */
+    void onProgress(float v);
+		/**
+		*处理成功
+		*/
+    void onSuccess(long executionId);
+		/**
+		*处理失败
+		*/
+    void onFailure(long executionId, String error);
+		/**
+		*取消处理
+		*/
+    void onCancel(long executionId);
+		/**
+		* ffmpeg 执行的 log
+		*/
+    void onFFmpegExecutionMessage(LogMessage logMessage);
+}
+```
+
+
 
 **AVEditor**
 
