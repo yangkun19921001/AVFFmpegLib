@@ -10,4 +10,9 @@
 .DS_Store
 /build
 /captures
+/app
+/app_lib
+/ffmpeglib
+/library
+/core
 .externalNativeBuild

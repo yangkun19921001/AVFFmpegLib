@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.devyk.av.ffmpegcmd.R
 import com.devyk.av.ffmpegcmd.utils.TimeUtil
 import com.devyk.ffmpeglib.entity.VideoEntity
+import com.devyk.ffmpeglib.util.VideoUitls
 
 /**
  * <pre>
@@ -23,7 +24,9 @@ public class VideoListsAdapter : BaseQuickAdapter<VideoEntity, BaseViewHolder> {
     private var mOnItemClickListener: OnItemClickListener? = null
 
     override fun convert(holder: BaseViewHolder, item: VideoEntity) {
-        holder.setText(R.id.tv_duration, TimeUtil.format(item.videoDuration)).setVisible(R.id.iv_select, item.isSelect)
+        holder.setText(R.id.tv_duration, TimeUtil.format(item.videoDuration))
+            .setVisible(R.id.iv_select, item.isSelect)
+            .setText(R.id.tv_size,VideoUitls.getSize(item.videoSize))
         Glide.with(context).load(item.videoPath).into(holder.getView(R.id.iv))
         holder.itemView.setOnClickListener {
             mOnItemClickListener?.onItemClick(holder.adapterPosition, item)

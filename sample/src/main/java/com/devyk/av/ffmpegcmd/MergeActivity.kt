@@ -114,7 +114,7 @@ class MergeActivity : BaseActivity(), View.OnClickListener {
             val outputOption = OutputOption(outPath);
             outputOption.setWidth(720)
             outputOption.setHeight(1280)
-            outputOption.bitRate = 1000
+//            outputOption.bitRate = 1000
             AVEditor.merge(videoList!!, outputOption, object : ExecuteCallback {
                 override fun onStart(executionId: Long?) {
                     initProgressDialog()

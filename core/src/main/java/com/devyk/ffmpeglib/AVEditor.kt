@@ -47,7 +47,6 @@ object AVEditor {
     /**
      * 处理单个视频
      * @Des FFmpeg的那些坑-Too many packets buffered for output stream
-     * @see https://blog.noahsun.top/2018/07/01/FFmpeg%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91-Too-many-packets-buffered-for-output-stream/
      * @param epVideo      需要处理的视频
      * @param outputOption 输出选项配置
      */

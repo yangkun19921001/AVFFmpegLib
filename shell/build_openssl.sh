@@ -7,6 +7,7 @@ echo "PREFIX"=$PREFIX
 
 #cd /root/android/library/openssl/openssl-1.1.1/
 cd /root/android/library/openssl/openssl-OpenSSL_1_1_1g/
+
 export ANDROID_NDK_HOME=$ANDROID_NDK_ROOT
 export PATH=$TOOLCHAIN/bin:$PATH
 export CC="$CC"

@@ -9,15 +9,15 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 101
-        versionName "1.0.1"
+        versionCode 102
+        versionName "1.0.2"
         project.archivesBaseName = "ffmpeg-core"
         consumerProguardFiles 'proguard-rules.pro'
 
         externalNativeBuild {
             cmake {
-//                cppFlags ""
                 abiFilters  'arm64-v8a','armeabi-v7a'
+//                abiFilters  'armeabi-v7a'
             }
         }
     }
@@ -37,7 +37,6 @@ android {
 
     sourceSets {
         main {
-//            jniLibs.srcDirs = ["../libs"]
             jniLibs.srcDirs = ["libs"]
         }
     }
@@ -58,11 +57,11 @@ publish {
     //bintray.com 用户名
     userOrg = 'yangkun19921001'
     // bintray 上仓库的名字
-    repoName = 'AVFFmpegLib'
+    repoName = 'AVFFmpegCore'
     //jcenter上 的路径
     groupId = 'com.devyk.ffmpeglib'
     //项目名称
-    artifactId = 'AVFFmpegLib'
+    artifactId = 'AVFFmpegCore'
     //版本号
     publishVersion = '1.0.2'// 描述
     //描述

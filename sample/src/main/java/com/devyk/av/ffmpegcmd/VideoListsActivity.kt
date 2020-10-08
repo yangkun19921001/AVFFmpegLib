@@ -1,6 +1,7 @@
 package com.devyk.av.ffmpegcmd
 
 import android.annotation.SuppressLint
+import android.database.Cursor
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +17,11 @@ import com.devyk.av.ffmpegcmd.utils.SpacingDecoration
 import com.devyk.ffmpeglib.entity.VideoEntity
 import kotlinx.android.synthetic.main.activity_video_lists.*
 import java.io.File
+import android.provider.MediaStore.Video
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
 
 /**
  * <pre>
@@ -73,10 +79,10 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
 
     private fun initTitle() {
         when (OPEN_UI_TYPE) {
-            TYPE_VIDEO_CLIP->  title = "选择要剪辑的视频"
-            TYPE_VIDEO_WATERMARK ->title = "选择添加水印的视频"
-            TYPE_VIDEO_EDITOR ->title = "选择要编辑的视频"
-            TYPE_VIDEO_MERGE ->title =  "选择要合并的视频(多选)"
+            TYPE_VIDEO_CLIP -> title = "选择要剪辑的视频"
+            TYPE_VIDEO_WATERMARK -> title = "选择添加水印的视频"
+            TYPE_VIDEO_EDITOR -> title = "选择要编辑的视频"
+            TYPE_VIDEO_MERGE -> title = "选择要合并的视频(多选)"
         }
 
     }
@@ -87,7 +93,6 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
         mVideoAdapter = VideoListsAdapter(mVideoEntity)
         recyclerView.adapter = mVideoAdapter;
         mVideoAdapter?.setOnItemClickListener(this)
-        next
         getVideoData()
     }
 
@@ -96,7 +101,10 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
      */
     private fun getVideoData() {
         Thread {
-            loadVideoList()
+
+//            loadVideoList()
+            mVideoEntity.addAll(getVideos())
+            mHandler.sendEmptyMessage(MSG_NOTIFY_DATA_CHANGED)
         }.start()
     }
 
@@ -157,6 +165,78 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
         }
         cursor.close()
         mHandler.sendEmptyMessage(MSG_NOTIFY_DATA_CHANGED)
+    }
+
+    /**
+     * 获取本机视频列表
+     * @return
+     */
+    fun getVideos(): ArrayList<VideoEntity> {
+
+        val videos = ArrayList<VideoEntity>()
+
+        var c: Cursor? = null
+        var path = ""
+        var id = -1
+        var name = ""
+        var size = 0L;
+        var duration = 0L
+
+        try {
+
+            // String[] mediaColumns = { "_id", "_data", "_display_name",
+            // "_size", "date_modified", "duration", "resolution" };
+            c = contentResolver.query(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                null,
+                null,
+                null,
+                MediaStore.Video.Media.DEFAULT_SORT_ORDER
+            )
+            while (c!!.moveToNext()) {
+
+                c!!.getString(c!!.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))?.let {
+                    path = it
+                }
+                val file = File(path)
+
+                if (!file.exists()) {
+                    continue
+                }
+                c!!.getInt(c!!.getColumnIndexOrThrow(MediaStore.Video.Media._ID))?.let {
+                    id = it
+                }// 视频的id?
+
+                try {
+                        c!!.getString(c!!.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)).let {
+                            name = it
+                        } // 视频名称
+
+                } catch (err: java.lang.Exception) {
+                    Log.e(TAG, err.message)
+                }
+
+                c!!.getLong(c!!.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)).let {
+                    size = it
+                }// 大小
+//                c!!.getLong(c!!.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)).let {
+//                    duration = it
+//                }
+
+                duration = getVideoDurationFromMediaMetadata(path)
+
+                // 时长
+                val video = VideoEntity(id, name, path, duration, size, false)
+                videos.add(video)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (c != null) {
+                c!!.close()
+            }
+        }
+        return videos
     }
 
     private fun getVideoDurationFromMediaMetadata(path: String): Long {

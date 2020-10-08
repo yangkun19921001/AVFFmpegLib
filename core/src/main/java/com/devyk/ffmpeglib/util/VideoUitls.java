@@ -9,6 +9,8 @@ import android.os.Build;
 import com.devyk.ffmpeglib.entity.VideoInfo;
 import com.devyk.ffmpeglib.util.TrackUtils;
 
+import java.text.DecimalFormat;
+
 
 /**
  * <pre>
@@ -55,11 +57,10 @@ public class VideoUitls {
 
     /**
      * 获取音轨数量
+     *
      * @return
      */
-    public static int getChannelCount(String url)
-
-    {
+    public static int getChannelCount(String url) {
         try {
             MediaExtractor mediaExtractor = new MediaExtractor();
             mediaExtractor.setDataSource(url);
@@ -68,15 +69,15 @@ public class VideoUitls {
                 return 0;
             }
             MediaFormat mediaFormat = mediaExtractor.getTrackFormat(audioExt);
-            int channel =0;
+            int channel = 0;
             if (mediaFormat.containsKey(MediaFormat.KEY_CHANNEL_COUNT))
-                channel =   mediaFormat.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
+                channel = mediaFormat.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
 
             mediaExtractor.release();
             return channel;
-        } catch (Exception e){
-        return 0;
-    }
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
 
@@ -84,10 +85,8 @@ public class VideoUitls {
      * 获取源数据的宽高
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static VideoInfo getVideoInfo(String url)
-
-    {
-        MediaMetadataRetriever metadataRetriever =new  MediaMetadataRetriever();
+    public static VideoInfo getVideoInfo(String url) {
+        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
         metadataRetriever.setDataSource(url);
         // 获得时长
         String duration = findMetadata(metadataRetriever, MediaMetadataRetriever.METADATA_KEY_DURATION);
@@ -106,8 +105,35 @@ public class VideoUitls {
         return new VideoInfo(duration, keyTitle, mimetype, bitrate, fps, videoWidth, videoHeight);
     }
 
-    private static String findMetadata(MediaMetadataRetriever metadataRetriever, int type){
-        return  metadataRetriever. extractMetadata(type);
+    private static String findMetadata(MediaMetadataRetriever metadataRetriever, int type) {
+        return metadataRetriever.extractMetadata(type);
     }
 
+
+    /**
+     * @param size
+     * @return
+     */
+    public static String getSize(long size) {
+        //获取到的size为：1705230
+        int GB = 1024 * 1024 * 1024;//定义GB的计算常量
+        int MB = 1024 * 1024;//定义MB的计算常量
+        int KB = 1024;//定义KB的计算常量
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        String resultSize = "";
+        if (size / GB >= 1) {
+            //如果当前Byte的值大于等于1GB
+            resultSize = df.format(size / (float) GB) + "GB";
+        } else if (size / MB >= 1) {
+            //如果当前Byte的值大于等于1MB
+            resultSize = df.format(size / (float) MB) + "MB";
+        } else if (size / KB >= 1) {
+            //如果当前Byte的值大于等于1KB
+            resultSize = df.format(size / (float) KB) + "KB";
+        } else {
+            resultSize = size + "B   ";
+        }
+
+        return resultSize;
+    }
 }

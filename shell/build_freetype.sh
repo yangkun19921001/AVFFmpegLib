@@ -2,12 +2,11 @@
 
 ARCH=$1
 source config.sh $ARCH
-LIBS_DIR=$(cd `dirname $0`; pwd)/libs/libmp3lame
+LIBS_DIR=$(cd `dirname $0`; pwd)/libs/freetype-2.10.0
 PREFIX=$LIBS_DIR/$AOSP_ABI
 echo "PREFIX"=$PREFIX
 
-#cd /root/android/library/openssl/openssl-1.1.1/
-cd /root/android/library/lame/lame-3.100/
+cd /root/android/library/freetype-2.10.0
 
 FLAGS="--enable-static --disable-shared --host=$HOST --target=android"
 
@@ -22,9 +21,11 @@ export NM="${CROSS_COMPILE}nm"
 
 
 ./configure $FLAGS \
---disable-frontend \
---prefix=$PREFIX \
+--without-zlib \
+--without-harfbuzz \
+--with-png=no \
 CPPFLAGS="-fPIC"
+
 
 make clean
 make
