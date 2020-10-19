@@ -699,6 +699,10 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     //TODO -- 测试 FFmpeg 是否可用
     LOGE("FFMPEG CONFIG %s \n", avutil_configuration());
     LOGE("FFMPEG VERSION%s \n", av_version_info());
+
+
+
+
 //    AVCodec *fdkaac = avcodec_find_encoder_by_name("libfdk_aac");
 //    AVCodec *libx264 = avcodec_find_encoder_by_name("libx264");
 //

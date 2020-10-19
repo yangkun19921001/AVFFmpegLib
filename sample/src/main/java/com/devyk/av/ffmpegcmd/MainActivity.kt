@@ -6,6 +6,7 @@ import android.view.View
 import com.devyk.ffmpeglib.callback.ExecuteCallback
 import com.devyk.av.ffmpegcmd.utils.AppUtils
 import com.devyk.ffmpeglib.AVEditor
+import com.devyk.ffmpeglib.entity.LogMessage
 import com.devyk.ffmpeglib.util.VideoUitls
 import kotlinx.android.synthetic.main.activity_main.*
 

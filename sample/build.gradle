@@ -11,8 +11,8 @@ android {
         applicationId "com.devyk.av.ffmpegcmd"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 101
-        versionName "1.0.1"
+        versionCode 102
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
 
@@ -50,8 +50,8 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 
     //视频剪辑器 SDK
-    implementation project(path: ':core')
-//    implementation 'com.devyk.ffmpeglib:AVFFmpegCore:1.0.1'
+//    implementation project(path: ':core')
+    implementation 'com.devyk.ffmpeglib:AVFFmpegCore:1.0.1'
 
 
 }
