@@ -20,6 +20,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (!new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "aveditor").exists()) {
+            new File(Environment.getExternalStorageDirectory().getPath() + File.separator + "aveditor").mkdirs();
+        }
         FileUtils.INSTANCE.copyFilesFassets(getApplicationContext(),"ttf", Environment.getExternalStorageDirectory().getPath()+ File.separator + "aveditor");
     }
 }
