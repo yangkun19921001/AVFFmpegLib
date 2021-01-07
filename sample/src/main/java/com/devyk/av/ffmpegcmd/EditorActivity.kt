@@ -175,7 +175,6 @@ class EditorActivity : BaseActivity(), View.OnClickListener {
                 }
             }
 
-
             if (cb_add_logo!!.isChecked) {
                 epVideo.addDraw(AVDraw(tv_logo_path.text.toString().trim(),
                         200, 200,

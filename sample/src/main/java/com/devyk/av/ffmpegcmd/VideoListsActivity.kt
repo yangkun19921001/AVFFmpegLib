@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.MediaStore
+import android.provider.MediaStore.Video
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -15,12 +16,10 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.devyk.av.ffmpegcmd.adapter.VideoListsAdapter
 import com.devyk.av.ffmpegcmd.utils.SpacingDecoration
 import com.devyk.ffmpeglib.entity.VideoEntity
+import com.devyk.ffmpeglib.entity.VideoInfo
 import kotlinx.android.synthetic.main.activity_video_lists.*
 import java.io.File
-import android.provider.MediaStore.Video
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
@@ -37,14 +36,17 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
 
     //视频列表适配器
     private var mVideoAdapter: VideoListsAdapter? = null
+
     //视频数据集合
-    private var mVideoEntity: MutableList<VideoEntity> = mutableListOf<VideoEntity>()
+    private var mVideoEntity: CopyOnWriteArrayList<VideoEntity> =
+        CopyOnWriteArrayList<VideoEntity>()
 
     //视频数据集合
     private var mSelectVideoList: ArrayList<VideoEntity> = ArrayList<VideoEntity>()
 
     //视频数据更新，通知 adapter
     private val MSG_NOTIFY_DATA_CHANGED = 0x1
+
     //传递过来的 open_ui_type
     private var OPEN_UI_TYPE = TYPE_VIDEO_CLIP
 
@@ -62,6 +64,7 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
 
         override fun handleMessage(msg: Message) {
             if (msg.what == MSG_NOTIFY_DATA_CHANGED) {
+//                mVideoAdapter?.setList(mVideoEntity)
                 mVideoAdapter?.notifyDataSetChanged()
             }
         }
@@ -88,7 +91,12 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
     }
 
     private fun initView() {
-        recyclerView.setLayoutManager(StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(
+            StaggeredGridLayoutManager(
+                2,
+                StaggeredGridLayoutManager.VERTICAL
+            )
+        );
         recyclerView.addItemDecoration(SpacingDecoration(this, 10f, 10f, true));
         mVideoAdapter = VideoListsAdapter(mVideoEntity)
         recyclerView.adapter = mVideoAdapter;
@@ -97,75 +105,16 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
     }
 
     /**
-     * 子线程加载设备中的视频数据
+     * 加载设备中的视频数据
      */
     private fun getVideoData() {
-        Thread {
-
-//            loadVideoList()
-            mVideoEntity.addAll(getVideos())
-            mHandler.sendEmptyMessage(MSG_NOTIFY_DATA_CHANGED)
-        }.start()
+        getVideos()
+//        mVideoEntity.addAll()
+        Log.d(TAG, "视频 size:${mVideoEntity.size}")
+        mVideoAdapter?.notifyDataSetChanged()
+//        mHandler.sendEmptyMessage(MSG_NOTIFY_DATA_CHANGED)
     }
 
-    private fun loadVideoList() {
-        val contentResolver = contentResolver
-        val projection =
-            arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.DISPLAY_NAME, MediaStore.Video.Media.DATA)
-        val orderBy = MediaStore.Video.Media.DISPLAY_NAME
-        val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-        val cursor = contentResolver.query(uri, projection, null, null, orderBy)
-        if (cursor != null && cursor.count > 0) {
-            cursor.moveToFirst()
-        } else {
-            return
-        }
-        val fileNum = cursor.count
-        for (count in 0 until fileNum) {
-            val videoPath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))
-            val file = File(videoPath)
-
-            if (!file.exists()) {
-                cursor.moveToNext()
-                continue
-            }
-            val video = VideoEntity()
-            video.id = (cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID)))
-            try {
-                video.videoName = (cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)))
-            } catch (error: Exception) {
-                Log.e(TAG, error.message)
-            }
-
-            video.videoPath = (videoPath)
-
-            val videoPathLowerCase = videoPath.toLowerCase()
-            if (!videoPathLowerCase.endsWith("mp4") && !videoPathLowerCase.endsWith("3gp") && !videoPathLowerCase.endsWith(
-                    "mkv"
-                ) && !videoPathLowerCase.endsWith("avi")
-            ) {
-                cursor.moveToNext()
-                continue
-            }
-            var duration: Long = 0
-            try {
-                if (duration == 0L) {
-                    duration = getVideoDurationFromMediaMetadata(video.videoPath)
-                }
-                if (duration > 0) {
-                    video.videoDuration = (duration)
-                    video.videoSize = (cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)))
-                    mVideoEntity.add(video)
-                }
-            } catch (e: Exception) {
-                Log.e("error:", e.message)
-                mVideoEntity.add(video)
-            }
-            cursor.moveToNext()
-        }
-        cursor.close()
-        mHandler.sendEmptyMessage(MSG_NOTIFY_DATA_CHANGED)
-    }
 
     /**
      * 获取本机视频列表
@@ -182,19 +131,18 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
         var size = 0L;
         var duration = 0L
 
-        try {
 
-            // String[] mediaColumns = { "_id", "_data", "_display_name",
-            // "_size", "date_modified", "duration", "resolution" };
-            c = contentResolver.query(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                null,
-                null,
-                null,
-                MediaStore.Video.Media.DEFAULT_SORT_ORDER
-            )
-            while (c!!.moveToNext()) {
-
+        // String[] mediaColumns = { "_id", "_data", "_display_name",
+        // "_size", "date_modified", "duration", "resolution" };
+        c = contentResolver.query(
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            null,
+            null,
+            null,
+            MediaStore.Video.Media.DEFAULT_SORT_ORDER
+        )
+        while (c!!.moveToNext()) {
+            try {
                 c!!.getString(c!!.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))?.let {
                     path = it
                 }
@@ -208,10 +156,10 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
                 }// 视频的id?
 
                 try {
-                        c!!.getString(c!!.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)).let {
+                    c!!.getString(c!!.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME))
+                        .let {
                             name = it
                         } // 视频名称
-
                 } catch (err: java.lang.Exception) {
                     Log.e(TAG, err.message)
                 }
@@ -226,15 +174,14 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
                 duration = getVideoDurationFromMediaMetadata(path)
 
                 // 时长
-                val video = VideoEntity(id, name, path, duration, size, false)
-                videos.add(video)
+                mVideoEntity.add(VideoEntity(id, name, path, duration, size, false))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e(TAG, e.toString())
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            if (c != null) {
-                c!!.close()
-            }
+        }
+        if (c != null) {
+            c!!.close()
         }
         return videos
     }
@@ -246,7 +193,9 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
             val mmr = MediaMetadataRetriever()
             try {
                 mmr.setDataSource(path)
-                duration = java.lang.Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))
+                if (mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION) != null)
+                    duration =
+                        java.lang.Long.parseLong(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -254,6 +203,7 @@ public class VideoListsActivity : BaseActivity(), VideoListsAdapter.OnItemClickL
         }
         return duration
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
